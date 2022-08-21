@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.Create;
+import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,6 @@ public class ItemDto {
     private String description;
     @NotNull(groups = {Create.class}, message = "available should not be null")
     private Boolean available;
-    private long owner;
+    private User owner;
     private Long request;
 }
