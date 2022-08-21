@@ -52,7 +52,7 @@ public class ItemRepository {
     public void deleteItem(long itemId) {
         items.remove(itemId);
     }
-    private void setItemParameters(long itemId, Item item) {
+    private void setItemParameters (long itemId, Item item) {
         if (item.getName() == null) {
             item.setName(items.get(itemId).getName());
         }
