@@ -47,7 +47,6 @@ public class ItemServiceImpl implements ItemService {
                 if (item.getOwner() == userId) {
                     itemDtoList.add(getItem(item.getId()));
                 }
-
             } else {
                 itemDtoList.add(ItemMapper.toItemDto(item));
             }
