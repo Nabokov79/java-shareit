@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchItem(Long userId, String text) {
         List<ItemDto> itemDtoList = new ArrayList<>();
-        if (text.equals("")){
+        if (text.equals("")) {
             return itemDtoList;
         }
         for (Item item : repository.getAllItems()) {
