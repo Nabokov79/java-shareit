@@ -31,7 +31,7 @@ public class ItemRepository {
     public Item updateItem(long userId, long itemId, Item item) {
         item.setId(itemId);
         setItemParameters(itemId, item);
-        if (userId != items.get(itemId).getOwner()) {
+        if (userId != items.get(itemId).getOwner().getId()) {
             throw new NotFoundException("Item for update not found");
         }
         if (userId == 0) {
@@ -60,7 +60,7 @@ public class ItemRepository {
         if (item.getDescription() == null) {
             item.setDescription(items.get(itemId).getDescription());
         }
-        if (item.getOwner() == 0) {
+        if (item.getOwner() == null) {
             item.setOwner(items.get(itemId).getOwner());
         }
         if (item.getAvailable() == null) {
