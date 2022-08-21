@@ -28,7 +28,7 @@ public class ItemRepository {
         return getItem(item.getId());
     }
 
-    public Item updateItem(long userId,long itemId, Item item) {
+    public Item updateItem(long userId, long itemId, Item item) {
         item.setId(itemId);
         setItemParameters(itemId, item);
         if (userId != items.get(itemId).getOwner()) {
@@ -52,7 +52,8 @@ public class ItemRepository {
     public void deleteItem(long itemId) {
         items.remove(itemId);
     }
-    private void setItemParameters(long itemId,Item item) {
+
+    private void setItemParameters(long itemId, Item item) {
         if (item.getName() == null) {
             item.setName(items.get(itemId).getName());
         }
