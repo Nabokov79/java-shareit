@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +14,17 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository repository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository repository, UserService userService) {
+    public ItemServiceImpl(ItemRepository repository, UserRepository userRepository) {
         this.repository = repository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public ItemDto createItem(ItemDto itemDto, long userId) {
-        userService.getUser(userId);
-        itemDto.setOwner(userService.getUser(userId).getId());
+        itemDto.setOwner(userRepository.getUser(userId));
         return ItemMapper.toItemDto(repository.addItem(ItemMapper.toItem(itemDto)));
     }
 
@@ -44,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> itemDtoList = new ArrayList<>();
         for (Item item : repository.getAllItems()) {
             if (userId != 0) {
-                if (item.getOwner() == userId) {
+                if (item.getOwner().getId() == userId) {
                     itemDtoList.add(getItem(item.getId()));
                 }
             } else {
@@ -60,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItem(Long userId, String text) {
+    public List<ItemDto> searchItemByNameAndDesctription(Long userId, String text) {
         List<ItemDto> itemDtoList = new ArrayList<>();
         if (text.equals("")) {
             return itemDtoList;

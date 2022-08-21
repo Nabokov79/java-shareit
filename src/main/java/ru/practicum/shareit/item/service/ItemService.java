@@ -15,5 +15,5 @@ public interface ItemService {
 
     void deleteItem(long itemId);
 
-    List<ItemDto> searchItem(Long userId, String text);
+    List<ItemDto> searchItemByNameAndDesctription(Long userId, String text);
 }
