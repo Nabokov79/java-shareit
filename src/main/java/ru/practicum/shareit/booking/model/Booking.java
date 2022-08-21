@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import ru.practicum.shareit.user.model.User;
 import java.time.LocalDate;
 
 @Data
@@ -14,10 +14,10 @@ public class Booking {
     private LocalDate start;
     private LocalDate end;
     private String item;
-    private String booker;
+    private User booker;
     private Status status;
 
-    public Booking(long id, String name, LocalDate start, LocalDate end, String item, String booker, Status status) {
+    public Booking(long id, String name, LocalDate start, LocalDate end, String item, User booker, Status status) {
         this.id = id;
         this.name = name;
         this.start = start;
