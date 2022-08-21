@@ -53,15 +53,19 @@ public class ItemRepository {
         items.remove(itemId);
     }
     private void setItemParameters(long itemId, Item item) {
+
         if (item.getName() == null) {
             item.setName(items.get(itemId).getName());
         }
+
         if (item.getDescription() == null) {
             item.setDescription(items.get(itemId).getDescription());
         }
+
         if (item.getOwner() == 0) {
             item.setOwner(items.get(itemId).getOwner());
         }
+
         if (item.getAvailable() == null) {
             item.setAvailable(items.get(itemId).getAvailable());
         }
