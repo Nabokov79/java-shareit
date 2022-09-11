@@ -30,6 +30,7 @@ public class ItemController {
                                               @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(service.createItem(itemDto, userId));
     }
+
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentResponseDto> createComment(@Validated({Create.class})
                                                             @RequestBody CommentRequestDto commentDto,
