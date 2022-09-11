@@ -9,6 +9,7 @@ import java.util.List;
 public interface ItemService {
 
     ItemDto createItem(ItemDto itemDto, Long userId);
+
     CommentResponseDto createComment(CommentRequestDto commentDto, Long itemId, Long userId);
 
     ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto);

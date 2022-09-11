@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
         Item itemDb = itemRepository.findById(itemId)
                                   .orElseThrow(() -> new NotFoundException(String.format("Item %s not found", itemId)));
         logger.info("Get item " + itemId);
-        return setResponseParametersItem(itemDb , userId , itemId);
+        return setResponseParametersItem(itemDb, userId, itemId);
     }
 
     @Override
