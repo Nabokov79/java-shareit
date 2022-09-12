@@ -36,8 +36,7 @@ public class ItemMapper {
         if (booking.getBooker() == null) {
             return null;
         }
-        return new ItemBooking(booking.getId(),
-                               booking.getBooker().getId());
+        return new ItemBooking(booking.getId(), booking.getBooker().getId());
     }
 
     public static Item toItem(ItemDto itemDto) {
