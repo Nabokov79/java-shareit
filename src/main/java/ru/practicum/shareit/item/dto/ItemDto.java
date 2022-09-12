@@ -18,6 +18,6 @@ public class ItemDto {
     private String description;
     @NotNull(groups = {Create.class}, message = "available should not be null")
     private Boolean available;
-    private Long owner;
-    private Long request;
+    private Long ownerId;
+    private Long requestId;
 }
