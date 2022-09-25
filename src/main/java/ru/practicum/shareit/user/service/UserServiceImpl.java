@@ -8,7 +8,7 @@ import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
-
+import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final ru.practicum.shareit.user.repository.UserRepository repository;
+    private final UserRepository repository;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public UserServiceImpl(ru.practicum.shareit.user.repository.UserRepository repository) {
+    public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
     }
 
