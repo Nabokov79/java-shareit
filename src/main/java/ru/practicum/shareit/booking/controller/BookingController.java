@@ -2,14 +2,18 @@ package ru.practicum.shareit.booking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
+@Validated
 public class BookingController {
 
     private final BookingService bookingService;
@@ -34,21 +38,33 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> getBookingById(@PathVariable Long bookingId,
-                                                         @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(bookingService.getBookingById(bookingId, userId));
     }
 
     @GetMapping
     public ResponseEntity<List<BookingResponseDto>> getAllBookingsByBookerId(
+                                                    @PositiveOrZero
+                                                    @RequestParam(name = "from", defaultValue = "0")
+                                                    int from,
+                                                    @Positive
+                                                    @RequestParam(name = "size", defaultValue = "20")
+                                                    int size,
                                                     @RequestParam(value = "state", defaultValue = "ALL") String state,
                                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return ResponseEntity.ok().body(bookingService.getAllBookingsByBookerId(state, userId));
+        return ResponseEntity.ok().body(bookingService.getAllBookingsByBookerId(from, size, state, userId));
     }
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingResponseDto>> getAllBookingsOwnerItem(
+                                                    @PositiveOrZero
+                                                    @RequestParam(name = "from", defaultValue = "0")
+                                                    int from,
+                                                    @Positive
+                                                    @RequestParam(name = "size", defaultValue = "20")
+                                                    int size,
                                                     @RequestParam(value = "state", defaultValue = "ALL") String state,
                                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return ResponseEntity.ok().body(bookingService.getAllBookingsOwnerItem(state, userId));
+        return ResponseEntity.ok().body(bookingService.getAllBookingsOwnerItem(from, size, state, userId));
     }
 }
