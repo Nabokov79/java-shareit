@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestPropertySource(properties = { "db.name=test"})
-@SpringJUnitConfig( {ShareItApp.class, ItemServiceImpl.class})
+@SpringJUnitConfig({ShareItApp.class, ItemServiceImpl.class})
 public class ItemServiceIntegrationTest {
 
     private final EntityManager em;
@@ -35,7 +35,7 @@ public class ItemServiceIntegrationTest {
         UserDto userDto = new UserDto(1L, "user", "user@email.ru");
         userService.createUser(userDto);
         ItemRequestCreateDto itemRequestDto = new ItemRequestCreateDto(1L, "description");
-        itemRequestService.createRequest( userDto.getId(), itemRequestDto);
+        itemRequestService.createRequest(userDto.getId(), itemRequestDto);
         ItemDto itemDto = new ItemDto(1L, "item", "item test", true, 1L,1L);
         itemService.createItem(itemDto, 1L);
         TypedQuery<Item> query = em.createQuery("Select i from Item i where i.id = : id", Item.class);
