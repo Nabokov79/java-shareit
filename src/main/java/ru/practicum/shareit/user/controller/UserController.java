@@ -30,14 +30,14 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable long userId,
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId,
                                               @Validated({Update.class})
                                               @RequestBody UserDto userDto) {
         return ResponseEntity.ok().body(service.updateUser(userId, userDto));
     }
 
     @GetMapping(value = "/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok().body(service.getUser(userId));
     }
 
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         service.delete(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
