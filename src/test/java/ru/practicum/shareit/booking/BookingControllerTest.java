@@ -10,7 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exeption.BadRequestException;
+
 import java.time.LocalDateTime;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +50,16 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", "1")
                         .param("approved", "true"))
                         .andExpect(status().isOk());
+    }
+
+    @Test
+    void confirmBooking2() throws Exception {
+        when(bookingService.confirmBooking(1L, false,1L)).thenThrow(BadRequestException.class);
+        mockMvc.perform(patch("/bookings/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", "1")
+                        .param("approved", "false"))
+                        .andExpect(status().isBadRequest());
     }
 
     @Test

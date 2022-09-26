@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -114,6 +115,14 @@ class UserControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.name", is(userDto.getName()), String.class))
                         .andExpect(jsonPath("$.email", is(userDto.getEmail()), String.class));
+    }
+
+    @Test
+    void getUser2() throws Exception {
+        when(userService.getUser(1L)).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isNotFound());
     }
 
     @Test
