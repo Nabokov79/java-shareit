@@ -27,8 +27,8 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                new ItemBooking(),
-                new ItemBooking(),
+                null,
+                null,
                 new ArrayList<>());
     }
 
