@@ -93,6 +93,16 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void createItemRequestIdIsNull() {
+        ItemDto itemDto = new ItemDto(1L, "item", "item test", true, 1L,null);
+        Item item = new Item(1L, "item", "item test", true, user,null);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(itemRequestRepository.findById(itemRequest.getId())).thenReturn(Optional.of(itemRequest));
+        when(itemRepository.save(any())).thenReturn(item);
+        assertNull(itemService.createItem(itemDto, 1L).getRequestId());
+    }
+
+    @Test
     void createComment() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
