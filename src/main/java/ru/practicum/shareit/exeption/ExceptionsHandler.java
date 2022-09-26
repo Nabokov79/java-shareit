@@ -21,7 +21,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = BadRequestException.class)
-    protected ResponseEntity<Object> handleNotFound(BadRequestException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
         logger.error("Bad request error: {}", ex.getMessage(), ex);
         return handleExceptionInternal(ex, new Message(ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
