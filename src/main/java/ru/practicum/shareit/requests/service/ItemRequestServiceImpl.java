@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exeption.BadRequestException;
 import ru.practicum.shareit.exeption.NotFoundException;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.requests.dto.ItemRequestCreateDto;
@@ -68,16 +68,16 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             throw new BadRequestException(String.format("Size cannot be  %s", size));
         }
         userService.getUser(userId);
-        Pageable pageable = PageRequest.of(from,size, Sort.by("owner_id").descending());
-        List<ItemRequest> itemRequestDb = itemRequestRepository.findAll().stream()
+        Pageable pageable = PageRequest.of(from,size);
+        List<ItemRequest> itemRequestDb = itemRequestRepository.findAll(pageable).stream()
                                                     .filter(itemRequest -> itemRequest.getRequester().getId() != userId)
                                                     .collect(Collectors.toList());
+        List<ItemDto> itemList = itemRepository.findAll().stream()
+                     .filter(item -> item.getRequest() != null).map(ItemMapper::toItemDto).collect(Collectors.toList());
         List<ItemRequestResponseDto> itemRequestList = new ArrayList<>();
         for (ItemRequest itemRequest : itemRequestDb) {
             ItemRequestResponseDto itemRequestResponseDto = ItemRequestMapper.toItemRequestResponseDto(itemRequest);
-            itemRequestResponseDto.setItems(itemRepository.findAllByOwnerId(userId, pageable).stream()
-                                                   .filter(item -> item.getRequest() != null).map(ItemMapper::toItemDto)
-                                                   .collect(Collectors.toList()));
+            itemRequestResponseDto.setItems(itemList);
             itemRequestList.add(itemRequestResponseDto);
         }
         return itemRequestList;
