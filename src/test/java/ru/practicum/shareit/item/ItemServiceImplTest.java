@@ -134,24 +134,27 @@ class ItemServiceImplTest {
     @Test
     void getItem() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
+        when(bookingRepository.findBookingByItemId(item.getId())).thenReturn(List.of(lastBooking, nextBooking));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         ItemResponseDto itemResponseDto = itemService.getItem(1L, 1L);
         assertEquals(item.getId(), itemResponseDto.getId());
         assertEquals(item.getName(), itemResponseDto.getName());
         assertEquals(item.getDescription(), itemResponseDto.getDescription());
+        assertNotNull(itemResponseDto.getLastBooking());
+        assertNotNull(itemResponseDto.getNextBooking());
         assertThrows(NotFoundException.class, () -> itemService.getItem(1L, 2L));
+        ItemResponseDto itemResponseDto2 = itemService.getItem(2L, 1L);
+        assertNull(itemResponseDto2.getLastBooking());
+        assertNull(itemResponseDto2.getNextBooking());
     }
 
     @Test
     void getAllItems() {
         Pageable pageable = PageRequest.of(1,1);
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(lastBooking);
-        bookings.add(nextBooking);
+        Item item = new Item(1L, "item", "item test", true, user, null);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(itemRepository.findAllByOwnerId(1, pageable)).thenReturn(Collections.singletonList(item));
-        when(bookingRepository.findBookingByItemId(1L)).thenReturn(bookings);
+        when(bookingRepository.findBookingByItemId(1L)).thenReturn(List.of(lastBooking, nextBooking));
         final List<ItemResponseDto> itemDtoList = itemService.getAllItems(1, 1, 1L);
         assertNotNull(itemDtoList);
         assertEquals(1, itemDtoList.size());
