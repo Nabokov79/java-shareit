@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v3
+        uses: yandex-praktikum/java-shareit/.github/workflows/api-tests.yml@ci
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
