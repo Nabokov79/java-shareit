@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -29,12 +28,12 @@ class UserServiceImplTest {
 
     @Test
     void createUser() {
-        when(userRepository.save(user)).thenReturn(user);
-        UserDto userDto = userService.createUser(UserMapper.toUserDto(user));
+        UserDto userDb = new UserDto(1L, "user", "user@email.ru");
+        when(userRepository.save(any())).thenReturn(user);
+        UserDto userDto = userService.createUser(userDb);
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getName(), userDto.getName());
         assertEquals(user.getEmail(), userDto.getEmail());
-        verify(userRepository, times(1)).save(user);
     }
 
     @Test
