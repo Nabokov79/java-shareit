@@ -101,7 +101,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemResponseDto> getAllItems(int from, int size, Long userId) {
         Pageable pageable = PageRequest.of(from,size);
-        List<Item> itemsDb = itemRepository.findAllByOwnerId(userId, pageable);
+        List<Item> itemsDb = itemRepository.findAllByOwnerId(userId, pageable)
+                                       .stream().filter(item -> item.getRequest() == null).collect(Collectors.toList());
         List<ItemResponseDto> itemResponseDto = new ArrayList<>();
         if (itemsDb.isEmpty()) {
             throw new NotFoundException(String.format("Owner %s items not found", userId));
@@ -169,22 +170,20 @@ public class ItemServiceImpl implements ItemService {
                                                                                  .filter(booking -> booking.getStatus()
                                                                                  .toString().equals("APPROVED"))
                                                                                  .collect(Collectors.toList());
-        if (bookingItem.isEmpty() || userId != itemDb.getOwner().getId()) {
-            itemResponseDto.setLastBooking(ItemMapper.toItemBooking(new Booking()));
-            itemResponseDto.setNextBooking(ItemMapper.toItemBooking(new Booking()));
-        } else {
+        if (!bookingItem.isEmpty() && userId == itemDb.getOwner().getId()) {
             itemResponseDto.setLastBooking(bookingItem.stream()
                     .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
                     .map(ItemMapper::toItemBooking).collect(Collectors.toList()).get(0));
             itemResponseDto.setNextBooking(bookingItem.stream()
                     .filter(booking -> booking.getEnd().isAfter(LocalDateTime.now()))
                     .map(ItemMapper::toItemBooking).collect(Collectors.toList()).get(0));
+            logger.info("Get item bookings by item_id = " + itemId + " user = " + userId);
         }
         List<CommentResponseDto> comments = commentRepository.findAllByItemId(itemId).stream()
                 .map(CommentMapper::toCommentResponseDto)
                 .collect(Collectors.toList());
         itemResponseDto.setComments(comments);
-        logger.info("Get item bookings by item_id = " + itemId + " user = " + userId);
+
         return itemResponseDto;
     }
 }
