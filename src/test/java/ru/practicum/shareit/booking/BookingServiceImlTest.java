@@ -80,7 +80,9 @@ class BookingServiceImlTest {
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         assertThrows(NotFoundException.class, () -> bookingService.createBooking(1L, bookingRequestDto));
         assertThrows(BadRequestException.class, () -> bookingService.createBooking(2L, booking1));
-        assertThrows(BadRequestException.class, () -> bookingService.createBooking(2L, booking2));
+        final  var thrown = assertThrows(BadRequestException.class,
+                                                                () -> bookingService.createBooking(2L, booking2));
+        assertEquals("Probably time booking for user = 2", thrown.getMessage());
     }
 
     @Test

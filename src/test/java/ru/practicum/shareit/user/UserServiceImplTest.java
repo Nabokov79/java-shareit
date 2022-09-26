@@ -56,7 +56,8 @@ class UserServiceImplTest {
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getName(), userDto.getName());
         assertEquals(user.getEmail(), userDto.getEmail());
-        assertThrows(NotFoundException.class, () -> userService.getUser(2L));
+        final  var thrown = assertThrows(NotFoundException.class, () -> userService.getUser(2L));
+        assertEquals("user 2 not found", thrown.getMessage());
         verify(userRepository, times(1)).findById(1L);
     }
 
