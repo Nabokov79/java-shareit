@@ -115,7 +115,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void deleteItem(Long itemId) {
-        itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.format("Item not found %s", itemId)));
+        itemRepository.findById(itemId)
+                      .orElseThrow(() -> new NotFoundException(String.format("Item not found %s", itemId)));
         logger.info("Delete item " + itemId);
         itemRepository.deleteById(itemId);
     }
@@ -155,7 +156,8 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getRequestId() == null) {
             item.setRequest(null);
         } else {
-            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(() -> new NotFoundException(String.format("Request %s not found", userId))));
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId())
+                              .orElseThrow(() -> new NotFoundException(String.format("Request %s not found", userId))));
         }
 
         logger.info("Set parameters for item user id = " + userId);
