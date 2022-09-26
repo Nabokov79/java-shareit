@@ -41,7 +41,6 @@ class ItemServiceImplTest {
     private ItemDto itemDto;
     private Item item;
     private User user;
-    private Booking booking;
     private Booking booking2;
     private Booking lastBooking;
     private Booking nextBooking;
@@ -64,7 +63,6 @@ class ItemServiceImplTest {
         user = new User(1L, "user", "user@email.ru");
         item = new Item(1L, "item", "item test", true, user, new ItemRequest());
         itemDto = new ItemDto(1L, "item", "item test", true, 1L,1L);
-        booking = new Booking(1L, LocalDateTime.now(), LocalDateTime.now().plusHours(5), item, user, Status.WAITING);
         booking2 = new Booking(2L, LocalDateTime.now().minusDays(2),
                                       LocalDateTime.now().minusDays(1).plusHours(5),
                                       item, user, Status.APPROVED);
