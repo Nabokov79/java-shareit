@@ -21,9 +21,9 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -121,7 +121,7 @@ class BookingServiceImlTest {
         Pageable pageable = PageRequest.of(1,1, Sort.by("start").descending());
         when(userService.getUser(userDto.getId())).thenReturn(userDto);
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
-                              .thenReturn(Collections.singletonList(booking));
+                              .thenReturn(List.of(booking));
         List<BookingResponseDto> bookingResponseDtos
                                  = bookingService.getAllBookingsByBookerId(1, 1, "ALL", userDto.getId());
         assertNotNull(bookingResponseDtos);
@@ -141,28 +141,28 @@ class BookingServiceImlTest {
         assertNotNull(bookingByStateFUTURE);
         assertEquals(1, bookingByStateFUTURE.size());
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
-                            .thenReturn(Collections.singletonList(new Booking(1L, LocalDateTime.now().minusHours(1),
+                            .thenReturn(List.of(new Booking(1L, LocalDateTime.now().minusHours(1),
                                                            LocalDateTime.now().plusDays(1),item,user, Status.WAITING)));
         List<BookingResponseDto> bookingByStateCURRENT
                              = bookingService.getAllBookingsByBookerId(1, 1, "CURRENT", userDto.getId());
         assertNotNull(bookingByStateCURRENT);
         assertEquals(1, bookingByStateCURRENT.size());
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
-                             .thenReturn(Collections.singletonList(new Booking(1L, LocalDateTime.now().plusHours(1),
+                             .thenReturn(List.of(new Booking(1L, LocalDateTime.now().plusHours(1),
                                                           LocalDateTime.now().plusDays(1),item,user, Status.REJECTED)));
         List<BookingResponseDto> bookingByStateREJECTED
                             = bookingService.getAllBookingsByBookerId(1, 1, "REJECTED", userDto.getId());
         assertNotNull(bookingByStateREJECTED);
         assertEquals(1, bookingByStateREJECTED.size());
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
-                             .thenReturn(Collections.singletonList(new Booking(1L, LocalDateTime.now().minusHours(2),
+                             .thenReturn(List.of(new Booking(1L, LocalDateTime.now().minusHours(2),
                                                          LocalDateTime.now().minusHours(1),item,user, Status.WAITING)));
         List<BookingResponseDto> bookingByStatePAST
                                 = bookingService.getAllBookingsByBookerId(1, 1, "PAST", userDto.getId());
         assertNotNull(bookingByStatePAST);
         assertEquals(1, bookingByStatePAST.size());
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
-                              .thenReturn(Collections.singletonList(booking));
+                              .thenReturn(List.of(booking));
         List<BookingResponseDto> bookingByStateWAITING
                              = bookingService.getAllBookingsByBookerId(1, 1, "WAITING", userDto.getId());
         assertNotNull(bookingByStateWAITING);
@@ -176,7 +176,7 @@ class BookingServiceImlTest {
         Pageable pageable = PageRequest.of(1,1, Sort.by("start").descending());
         when(userService.getUser(userDto.getId())).thenReturn(userDto);
         when(bookingRepository.findBookingByOwnerId(userDto.getId(), pageable))
-                              .thenReturn(Collections.singletonList(booking));
+                              .thenReturn(List.of(booking));
         List<BookingResponseDto> bookingResponseDtos
                                   = bookingService.getAllBookingsOwnerItem(1, 1, "ALL", userDto.getId());
         assertNotNull(bookingResponseDtos);
