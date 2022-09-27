@@ -3,6 +3,9 @@ package ru.practicum.shareit.booking.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
@@ -14,9 +17,11 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exeption.BadRequestException;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,8 +47,9 @@ public class BookingServiceIml implements BookingService {
     public BookingResponseDto createBooking(Long userId, BookingRequestDto bookingDto) {
         Booking booking = BookingMapper.toBooking(bookingDto);
         setBookingValues(userId, booking, bookingDto);
+        bookingRepository.save(booking);
         logger.info("Create booking");
-        return BookingMapper.toBookingResponseDto(bookingRepository.save(booking));
+        return BookingMapper.toBookingResponseDto(booking);
     }
 
     @Override
@@ -78,9 +84,11 @@ public class BookingServiceIml implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsByBookerId(String state, Long userId) {
+    public List<BookingResponseDto> getAllBookingsByBookerId(int from, int size, String state, Long userId) {
         userService.getUser(userId);
-        List<Booking> bookings =  bookingRepository.findBookingByBookerId(userId);
+        Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
+        logger.warn("Page = " + pageable.getPageNumber() + " " + "Size = " + pageable.getPageSize());
+        List<Booking> bookings =  new ArrayList<>(bookingRepository.findBookingByBookerId(userId, pageable));
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
         }
@@ -89,9 +97,10 @@ public class BookingServiceIml implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsOwnerItem(String state, Long userId) {
+    public List<BookingResponseDto> getAllBookingsOwnerItem(int from, int size,String state, Long userId) {
         userService.getUser(userId);
-        List<Booking> bookings = bookingRepository.findBookingByOwnerId(userId);
+        Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
+        List<Booking> bookings = bookingRepository.findBookingByOwnerId(userId, pageable);
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
         }
@@ -102,21 +111,23 @@ public class BookingServiceIml implements BookingService {
     private void setBookingValues(Long userId, Booking booking, BookingRequestDto bookingDto) {
         booking.setItem(itemRepository.findById(bookingDto.getItemId())
                  .orElseThrow(() -> new NotFoundException(String.format("item %s not found", bookingDto.getItemId()))));
+
         if (!booking.getItem().getAvailable()) {
             throw new BadRequestException("Item unavailable for booking");
         }
         if (booking.getItem().getOwner().getId() == userId) {
             throw new NotFoundException(String.format("User %s owner this item", bookingDto.getItemId()));
         }
-        booking.setBooker(UserMapper.toUser(userService.getUser(userId)));
         if (bookingDto.getStart().isAfter(bookingDto.getEnd()) ||
                 bookingDto.getStart().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Probably time booking for user = " + userId);
         }
+        UserDto userDb = userService.getUser(userId);
+        booking.setBooker(UserMapper.toUser(userDb));
         logger.info("Set bookings parameters by user_id = " + userId);
     }
 
-    public static Optional<State> checkState(String stateRequest) {
+    private static Optional<State> checkState(String stateRequest) {
         for (State state: State.values()) {
             if (stateRequest.equals(state.toString())) {
                 return Optional.of(State.valueOf(stateRequest));

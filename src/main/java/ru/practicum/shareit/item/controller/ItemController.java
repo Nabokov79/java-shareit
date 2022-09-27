@@ -6,13 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Create;
-import ru.practicum.shareit.Update;
+import ru.practicum.shareit.common.Create;
+import ru.practicum.shareit.common.Update;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.service.ItemService;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RequestMapping("/items")
@@ -53,8 +55,14 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return ResponseEntity.ok().body(service.getAllItems(userId));
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@PositiveOrZero
+                                                             @RequestParam(name = "from", defaultValue = "0")
+                                                             int from,
+                                                             @Positive
+                                                             @RequestParam(name = "size", defaultValue = "20")
+                                                             int size,
+                                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return ResponseEntity.ok().body(service.getAllItems(from, size, userId));
     }
 
     @DeleteMapping(value = "/{itemId}")
@@ -65,7 +73,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> searchItemByNameAndDesctription(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                    @RequestParam String text) {
-        return ResponseEntity.ok().body(service.searchItemByNameAndDesctription(userId,text));
+                                                                         @RequestParam String text) {
+        return ResponseEntity.ok().body(service.searchItemByNameAndDesctription(userId, text));
     }
 }

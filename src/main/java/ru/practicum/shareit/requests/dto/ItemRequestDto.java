@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.requests.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,10 +8,9 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @AllArgsConstructor
-public class CommentResponseDto {
+public class ItemRequestDto {
 
     private long id;
-    private String text;
-    private String authorName;
+    private String description;
     private LocalDateTime created;
 }
