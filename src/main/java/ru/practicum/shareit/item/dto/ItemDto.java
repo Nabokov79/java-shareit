@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
 

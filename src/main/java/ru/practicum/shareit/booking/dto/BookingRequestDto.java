@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequestDto {
 

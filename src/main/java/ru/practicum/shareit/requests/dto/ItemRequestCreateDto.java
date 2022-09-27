@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ItemRequestCreateDto {
 
