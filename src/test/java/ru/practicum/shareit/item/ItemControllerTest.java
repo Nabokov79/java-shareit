@@ -13,10 +13,13 @@ import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.item.model.ItemBooking;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,6 +43,7 @@ class ItemControllerTest {
     private ItemServiceImpl itemService;
     private UserRepository userRepository;
     private ItemResponseDto itemResponseDto;
+
     private ItemDto itemDto;
     private ItemDto itemDto1;
     private ItemDto itemDto2;
@@ -52,7 +56,8 @@ class ItemControllerTest {
         itemDto1 = new ItemDto(1L, "", "item test", true, 1L, 1L);
         itemDto2 = new ItemDto(1L, "item", "", true, 1L, 1L);
         comment = new CommentRequestDto(1L,"Comment for item");
-        itemResponseDto = new ItemResponseDto();
+        itemResponseDto = new ItemResponseDto(1L, "item","Request", true,
+                         new ItemBooking(1L,1L), new ItemBooking(2L,2L), List.of());
     }
 
     @Test
