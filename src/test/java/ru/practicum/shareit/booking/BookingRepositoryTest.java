@@ -19,7 +19,9 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -88,7 +90,7 @@ class BookingRepositoryTest {
 
     @Test
     void findBookingByItemId() {
-        List<Booking> bookingList = bookingRepository.findBookingByItemId(item.getId());
+        List<Booking> bookingList = new ArrayList<>(bookingRepository.findBookingByItemId(item.getId()));
         assertNotNull(bookingList);
         assertEquals(1, bookingList.size());
         Booking booking = bookingList.get(0);
@@ -103,7 +105,7 @@ class BookingRepositoryTest {
 
     @Test
     void findBookingByItemIdAndBookerId() {
-        List<Booking> bookingList = bookingRepository.findBookingByItemIdAndBookerId(item.getId(), user.getId());
+        List<Booking> bookingList = new ArrayList<>(bookingRepository.findBookingByItemIdAndBookerId(item.getId(), user.getId()));
         assertNotNull(bookingList);
         assertEquals(1, bookingList.size());
         Booking booking = bookingList.get(0);
