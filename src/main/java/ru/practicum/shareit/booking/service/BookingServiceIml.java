@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,7 +88,7 @@ public class BookingServiceIml implements BookingService {
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
         logger.warn("Page = " + pageable.getPageNumber() + " " + "Size = " + pageable.getPageSize());
-        List<Booking> bookings =  bookingRepository.findBookingByBookerId(userId, pageable);
+        List<Booking> bookings =  new ArrayList<>(bookingRepository.findBookingByBookerId(userId, pageable));
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
         }
