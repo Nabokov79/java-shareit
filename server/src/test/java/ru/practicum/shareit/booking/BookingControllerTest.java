@@ -83,28 +83,6 @@ class BookingControllerTest {
     }
 
     @Test
-    void getAllBookingsByBookerId_FromNoPositive() throws Exception {
-        mockMvc.perform(get("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
-                        .param("from", "-1")
-                        .param("size", "1")
-                        .param("state", "FUTURE"))
-                        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void getAllBookingsByBookerId_SizeNoPositive() throws Exception {
-        mockMvc.perform(get("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
-                        .param("from", "1")
-                        .param("size", "-1")
-                        .param("state", "FUTURE"))
-                        .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void getAllBookingsOwnerItem() throws Exception {
         mockMvc.perform(get("/bookings/owner")
                         .contentType(MediaType.APPLICATION_JSON)
