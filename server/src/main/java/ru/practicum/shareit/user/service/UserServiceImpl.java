@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exeption.BadRequestException;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -27,9 +28,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = repository.save(UserMapper.toUser(userDto));
-        logger.info("User save: {}", user);
-        return UserMapper.toUserDto(user);
+        List<User> userList = repository.findAll().stream()
+                               .filter(user -> user.getEmail().equals(userDto.getEmail())).collect(Collectors.toList());
+        if (!userList.isEmpty()) {
+            logger.error("user found with email={}",userDto.getEmail());
+            throw new BadRequestException("User found with email= " + userDto.getEmail());
+        }
+        logger.info("User save: {}", userDto);
+        return UserMapper.toUserDto(repository.save(UserMapper.toUser(userDto)));
     }
 
     @Override
