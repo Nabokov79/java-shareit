@@ -23,9 +23,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=mywords
+      - SERVER_PORT=9090
 
   db:
-    image: postgres:14-alpine
+    image: postgres:14
     container_name: "data_base"
     ports:
       - "6541:5432"
