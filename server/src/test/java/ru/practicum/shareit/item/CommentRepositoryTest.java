@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,24 @@ class CommentRepositoryTest {
     private ItemRepository itemRepository;
     @Autowired
     private ItemRequestRepository itemRequestRepository;
-    private User user;
     private Item item;
-    private ItemRequest itemRequest;
     private Comment comment;
 
     @BeforeEach
     void beforeEach() {
-        user = userRepository.save(new User(1L, "User1", "user@email.ru"));
-        itemRequest =  itemRequestRepository.save(new ItemRequest(1L, "description", LocalDateTime.now(), user));
-        item = itemRepository.save(new Item(1L, "item", "item test", true, user, itemRequest));
-        comment = commentRepository.save(new Comment(1L, "Comment test", item,user));
+        User user = userRepository.save(new User(1L, "User1", "user@email.ru"));
+        ItemRequest itemRequest = itemRequestRepository.save(new ItemRequest(1L, "description",
+                                                                                            LocalDateTime.now(), user));
+        item = itemRepository.save(new Item(1L, "item", "item test", true,
+                                                                                                    user, itemRequest));
+        comment = commentRepository.save(new Comment(1L, "Comment test", item, user));
+    }
+
+    @AfterEach
+    void afterEach() {
+        userRepository.deleteAll();
+        itemRepository.deleteAll();
+        commentRepository.deleteAll();
     }
 
     @Test
