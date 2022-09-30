@@ -12,16 +12,17 @@ import ru.practicum.shareit.exeption.BadRequestException;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.requests.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,12 +130,15 @@ public class ItemServiceImpl implements ItemService {
             return itemDtoList;
         }
         List<Item> itemDbList = itemRepository.findAll();
+        logger.info("List<Item> itemDbList size = " + itemDbList.size());
         if (itemDbList.isEmpty()) {
             throw new BadRequestException("Items not found.");
         }
         for (Item item : itemDbList) {
+            logger.info("List<Item> itemDbList item = " + item);
             if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
                     item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.getAvailable()) {
+                logger.info("List<Item> itemDbList search item = " + item);
                 itemDtoList.add(ItemMapper.toItemDto(item));
             }
         }
