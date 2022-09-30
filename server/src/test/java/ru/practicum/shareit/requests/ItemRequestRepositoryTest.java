@@ -20,6 +20,7 @@ class ItemRequestRepositoryTest {
     ItemRequestRepository itemRequestRepository;
     @Autowired
     UserRepository userRepository;
+
     private ItemRequest itemRequest;
     private User user;
 
@@ -27,19 +28,21 @@ class ItemRequestRepositoryTest {
     void beforeEach() {
         user = userRepository.save(new User(1L, "User1", "user@email.ru"));
         itemRequest = itemRequestRepository.save(new ItemRequest(1L,"findAllByRequesterId",
-                                                                            LocalDateTime.now(), user));
+                LocalDateTime.now(), user));
     }
 
     @Test
     void findAllByRequesterId() {
-        List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequesterId(user.getId());
-        assertNotNull(itemRequests);
-        assertEquals(1, itemRequests.size());
-        ItemRequest itemRequestDb = itemRequests.get(0);
+        List<ItemRequest> itemRequestsList = itemRequestRepository.findAllByRequesterId(user.getId());
+        assertNotNull(itemRequestsList);
+        assertEquals(1, itemRequestsList.size());
+        ItemRequest itemRequestDb = itemRequestsList.get(0);
         assertEquals(itemRequest.getId(), itemRequestDb.getId());
         assertEquals(itemRequest.getDescription(), itemRequestDb.getDescription());
         assertEquals(itemRequest.getCreated().format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss")),
                                 itemRequestDb.getCreated().format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss")));
-        assertEquals(itemRequest.getRequester(),itemRequestDb.getRequester());
+        assertEquals(user.getId(),itemRequestDb.getRequester().getId());
+        assertEquals(user.getName(),itemRequestDb.getRequester().getName());
+        assertEquals(user.getEmail(),itemRequestDb.getRequester().getEmail());
     }
 }
