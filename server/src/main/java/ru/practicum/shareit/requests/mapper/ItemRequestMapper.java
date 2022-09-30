@@ -1,6 +1,5 @@
 package ru.practicum.shareit.requests.mapper;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.requests.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Component
-@Slf4j
 public class ItemRequestMapper {
 
     public static ItemRequest toItemRequest(ItemRequestCreateDto itemRequestCreateDto) {
