@@ -28,14 +28,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        logger.info("User save: {}", userDto);
         List<User> userList = repository.findAll().stream()
                                .filter(user -> user.getEmail().equals(userDto.getEmail())).collect(Collectors.toList());
         if (!userList.isEmpty()) {
             logger.error("user found with email={}",userDto.getEmail());
             throw new BadRequestException("User found with email= " + userDto.getEmail());
         }
-        logger.info("User save: {}", userDto);
-        return UserMapper.toUserDto(repository.save(UserMapper.toUser(userDto)));
+        User user = repository.save(UserMapper.toUser(userDto));
+        logger.info("Return User from DataBase user: {}", userDto);
+        return UserMapper.toUserDto(user);
     }
 
     @Override
