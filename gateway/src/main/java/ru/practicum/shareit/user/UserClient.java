@@ -28,6 +28,7 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> saveUser(UserDto userDto) {
+        log.info("USER_CLIENT CLASS user = " + userDto);
         return post("", userDto);
     }
 
