@@ -19,10 +19,9 @@ public class UserController {
 
     private final UserClient userClient;
 
-
     @PostMapping
     public ResponseEntity<Object> createUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
-        log.info("Received request to create users userDto={}", userDto);
+        log.info("UserController = Received request to create users userDto={}", userDto);
         return userClient.saveUser(userDto);
     }
 

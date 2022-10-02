@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,13 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
+
 import java.util.List;
+
 
 @RequestMapping(path = "/users")
 @Controller
 public class UserController {
 
     private final UserService service;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public UserController(UserService service) {
@@ -23,7 +28,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok().body(service.createUser(userDto));
+        UserDto userDto1 = service.createUser(userDto);
+        logger.error("Return from service user ={}",userDto1);
+        return ResponseEntity.ok().body(userDto1);
     }
 
     @PatchMapping(value = "/{userId}")
