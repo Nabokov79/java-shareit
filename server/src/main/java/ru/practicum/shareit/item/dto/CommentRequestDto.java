@@ -11,5 +11,4 @@ public class CommentRequestDto {
 
     private long id;
     private String text;
-
 }
