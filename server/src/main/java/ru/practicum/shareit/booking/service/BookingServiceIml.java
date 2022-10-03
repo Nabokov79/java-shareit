@@ -95,15 +95,17 @@ public class BookingServiceIml implements BookingService {
 
     @Override
     public List<BookingResponseDto> getAllBookingsOwnerItem(int from, int size,String state, Long userId) {
+        logger.info("Get all bookings by owner_id = " + userId + " State = " + state);
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
-        List<Booking> bookings = bookingRepository.findBookingByOwnerId(userId, pageable).stream()
-                                .filter(booking -> booking.getStatus() != Status.REJECTED).collect(Collectors.toList());
-        if (bookings.isEmpty()) {
-            throw new NotFoundException(String.format("Bookings not found for user %s", userId));
+        if (state.equals("REJECTED")) {
+           return sortByState(state, bookingRepository.findBookingByOwnerId(userId, pageable).stream()
+                    .filter(booking -> booking.getStatus() == Status.REJECTED).collect(Collectors.toList()));
+
+        } else {
+           return sortByState(state, bookingRepository.findBookingByOwnerId(userId, pageable).stream()
+                    .filter(booking -> booking.getStatus() != Status.REJECTED).collect(Collectors.toList()));
         }
-        logger.info("Get all bookings by owner_id = " + userId + " State = " + state);
-        return sortByState(state, bookings);
     }
 
     private void setBookingValues(Long userId, Booking booking, BookingRequestDto bookingDto) {
@@ -127,6 +129,9 @@ public class BookingServiceIml implements BookingService {
 
     private List<BookingResponseDto> sortByState(String state, List<Booking> bookings) {
         logger.info("Get booking type " + state);
+        if (bookings.isEmpty()) {
+            throw new NotFoundException("Bookings not found");
+        }
         switch (State.valueOf(state)) {
             case FUTURE:
                 return bookings.stream().filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
