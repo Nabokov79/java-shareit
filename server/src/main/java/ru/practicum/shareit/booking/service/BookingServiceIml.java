@@ -98,14 +98,7 @@ public class BookingServiceIml implements BookingService {
         logger.info("Get all bookings by owner_id = " + userId + " State = " + state);
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
-        if (state.equals("REJECTED")) {
-           return sortByState(state, bookingRepository.findBookingByOwnerId(userId, pageable).stream()
-                    .filter(booking -> booking.getStatus() == Status.REJECTED).collect(Collectors.toList()));
-
-        } else {
-           return sortByState(state, bookingRepository.findBookingByOwnerId(userId, pageable).stream()
-                    .filter(booking -> booking.getStatus() != Status.REJECTED).collect(Collectors.toList()));
-        }
+        return sortByState(state, bookingRepository.findBookingByOwnerId(userId, pageable));
     }
 
     private void setBookingValues(Long userId, Booking booking, BookingRequestDto bookingDto) {
@@ -135,20 +128,21 @@ public class BookingServiceIml implements BookingService {
         switch (State.valueOf(state)) {
             case FUTURE:
                 return bookings.stream().filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                        .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
+                                                 .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
             case CURRENT:
                 return bookings.stream().filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                        .filter(booking -> booking.getEnd().isAfter(LocalDateTime.now()))
-                        .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
+                                                 .filter(booking -> booking.getEnd().isAfter(LocalDateTime.now()))
+                                                 .filter(booking -> booking.getStatus().toString().equals("REJECTED"))
+                                                 .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
             case REJECTED:
                 return bookings.stream().filter(booking -> booking.getStatus().toString().equals("REJECTED"))
-                        .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
+                                                 .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
             case PAST:
                 return bookings.stream().filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
-                        .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
+                                                 .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
             case WAITING:
                 return bookings.stream().filter(booking -> booking.getStatus().toString().equals("WAITING"))
-                        .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
+                                                 .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
             default:
                 return bookings.stream().map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
         }

@@ -142,7 +142,7 @@ class BookingServiceImlTest {
         assertEquals(1, bookingByStateFUTURE.size());
         when(bookingRepository.findBookingByBookerId(userDto.getId(), pageable))
                             .thenReturn(List.of(new Booking(1L, LocalDateTime.now().minusHours(1),
-                                                           LocalDateTime.now().plusDays(1),item,user, Status.WAITING)));
+                                                           LocalDateTime.now().plusDays(1),item,user, Status.REJECTED)));
         List<BookingResponseDto> bookingByStateCURRENT
                              = bookingService.getAllBookingsByBookerId(1, 1, "CURRENT", userDto.getId());
         assertNotNull(bookingByStateCURRENT);
