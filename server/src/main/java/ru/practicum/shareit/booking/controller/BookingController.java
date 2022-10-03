@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -44,27 +42,19 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<List<BookingResponseDto>> getAllBookingsByBookerId(
-                                                    @PositiveOrZero
-                                                    @RequestParam(name = "from", defaultValue = "0")
-                                                    int from,
-                                                    @Positive
-                                                    @RequestParam(name = "size", defaultValue = "20")
-                                                    int size,
-                                                    @RequestParam(value = "state", defaultValue = "ALL") String state,
+                                                      @RequestParam(name = "from", defaultValue = "0") int from,
+                                                      @RequestParam(name = "size", defaultValue = "20") int size,
+                                                      @RequestParam(value = "state", defaultValue = "ALL") String state,
                                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(bookingService.getAllBookingsByBookerId(from, size, state, userId));
     }
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingResponseDto>> getAllBookingsOwnerItem(
-                                                    @PositiveOrZero
-                                                    @RequestParam(name = "from", defaultValue = "0")
-                                                    int from,
-                                                    @Positive
-                                                    @RequestParam(name = "size", defaultValue = "20")
-                                                    int size,
-                                                    @RequestParam(value = "state", defaultValue = "ALL") String state,
-                                                    @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                      @RequestParam(name = "from", defaultValue = "0") int from,
+                                                      @RequestParam(name = "size", defaultValue = "20") int size,
+                                                      @RequestParam(value = "state", defaultValue = "ALL") String state,
+                                                      @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(bookingService.getAllBookingsOwnerItem(from, size, state, userId));
     }
 }

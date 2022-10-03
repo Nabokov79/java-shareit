@@ -2,19 +2,15 @@ package ru.practicum.shareit.requests.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.requests.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.requests.service.ItemRequestService;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
-@Validated
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 
@@ -25,8 +21,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<ItemRequestDto> createRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                        @RequestBody
-                                                        @Validated ItemRequestCreateDto itemRequestCreateDto) {
+                                                        @RequestBody ItemRequestCreateDto itemRequestCreateDto) {
         ItemRequestDto itemRequestResponseDto = itemRequestService.createRequest(userId, itemRequestCreateDto);
         return ResponseEntity.ok().body(itemRequestResponseDto);
     }
@@ -38,13 +33,9 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ItemRequestResponseDto>> getAllRequest(@PositiveOrZero
-                                                                      @RequestParam(name = "from", defaultValue = "0")
-                                                                       int from,
-                                                                      @Positive
-                                                                      @RequestParam(name = "size", defaultValue = "20")
-                                                                      int size,
-                                                                      @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemRequestResponseDto>> getAllRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                                           @RequestParam(name = "size", defaultValue = "20") int size) {
         return ResponseEntity.ok().body(itemRequestService.getAllRequest(from, size, userId));
     }
 
