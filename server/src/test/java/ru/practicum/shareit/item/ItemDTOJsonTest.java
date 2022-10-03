@@ -19,7 +19,6 @@ public class ItemDTOJsonTest {
 
     @Autowired
     private JacksonTester<ItemDto> json;
-
     @Autowired
     private JacksonTester<ItemResponseDto> json2;
 
