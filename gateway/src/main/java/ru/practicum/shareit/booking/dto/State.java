@@ -9,7 +9,6 @@ public enum State {
 	PAST,
 	REJECTED,
 	WAITING;
-
 	public static Optional<State> from(String stringState) {
 		for (State state : values()) {
 			if (state.name().equalsIgnoreCase(stringState)) {
