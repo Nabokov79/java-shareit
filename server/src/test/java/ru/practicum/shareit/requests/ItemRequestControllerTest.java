@@ -21,7 +21,6 @@ class ItemRequestControllerTest {
 
     @Autowired
     ObjectMapper mapper;
-
     @Autowired
     MockMvc mockMvc;
 

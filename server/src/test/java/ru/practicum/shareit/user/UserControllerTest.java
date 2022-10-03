@@ -29,7 +29,6 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private MockMvc mockMvc;
 
