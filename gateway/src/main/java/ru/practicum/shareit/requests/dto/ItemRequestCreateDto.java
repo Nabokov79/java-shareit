@@ -1,6 +1,9 @@
 package ru.practicum.shareit.requests.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
 @Setter
