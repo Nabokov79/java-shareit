@@ -16,3 +16,4 @@ public interface BookingService {
 
     List<BookingResponseDto> getAllBookingsOwnerItem(int from, int size, String state, Long userId);
 }
+

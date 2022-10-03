@@ -85,7 +85,6 @@ public class BookingServiceIml implements BookingService {
     public List<BookingResponseDto> getAllBookingsByBookerId(int from, int size, String state, Long userId) {
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
-        logger.warn("Page = " + pageable.getPageNumber() + " " + "Size = " + pageable.getPageSize());
         List<Booking> bookings =  bookingRepository.findBookingByBookerId(userId, pageable);
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
