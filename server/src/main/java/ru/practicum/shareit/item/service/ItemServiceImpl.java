@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -18,6 +19,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.ItemBooking;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.requests.repository.ItemRequestRepository;
@@ -100,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemResponseDto> getAllItems(int from, int size, Long userId) {
-        Pageable pageable = PageRequest.of(from,size);
+        Pageable pageable = PageRequest.of(from,size, Sort.by("Owner").descending());
         List<Item> itemsDb = itemRepository.findAllByOwnerId(userId, pageable)
                                        .stream().filter(item -> item.getRequest() == null).collect(Collectors.toList());
         List<ItemResponseDto> itemResponseDto = new ArrayList<>();
@@ -130,6 +132,7 @@ public class ItemServiceImpl implements ItemService {
         }
         List<Item> itemDbList = itemRepository.findAll();
         if (itemDbList.isEmpty()) {
+            logger.info("itemDbList empty for user = " + userId);
             throw new BadRequestException("Items not found.");
         }
         for (Item item : itemDbList) {
@@ -171,12 +174,18 @@ public class ItemServiceImpl implements ItemService {
                                                                                  .toString().equals("APPROVED"))
                                                                                  .collect(Collectors.toList());
         if (!bookingItem.isEmpty() && userId == itemDb.getOwner().getId()) {
-            itemResponseDto.setLastBooking(bookingItem.stream()
+            List<ItemBooking> lastBooking = bookingItem.stream()
                     .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                    .map(ItemMapper::toItemBooking).collect(Collectors.toList()).get(0));
-            itemResponseDto.setNextBooking(bookingItem.stream()
+                    .map(ItemMapper::toItemBooking).collect(Collectors.toList());
+            List<ItemBooking> nextBooking = bookingItem.stream()
                     .filter(booking -> booking.getEnd().isAfter(LocalDateTime.now()))
-                    .map(ItemMapper::toItemBooking).collect(Collectors.toList()).get(0));
+                    .map(ItemMapper::toItemBooking).collect(Collectors.toList());
+            if (!lastBooking.isEmpty()) {
+                itemResponseDto.setLastBooking(lastBooking.get(0));
+            }
+            if (!nextBooking.isEmpty()) {
+                itemResponseDto.setNextBooking(nextBooking.get(0));
+            }
             logger.info("Get item bookings by item_id = " + itemId + " user = " + userId);
         }
         List<CommentResponseDto> comments = commentRepository.findAllByItemId(itemId).stream()
