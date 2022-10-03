@@ -4,17 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.common.Create;
-import ru.practicum.shareit.common.Update;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.service.ItemService;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RequestMapping("/items")
@@ -28,23 +23,22 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> createItem(@Validated({Create.class}) @RequestBody ItemDto itemDto,
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto,
                                               @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(service.createItem(itemDto, userId));
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<CommentResponseDto> createComment(@Validated({Create.class})
-                                                            @RequestBody CommentRequestDto commentDto,
-                                                            @PathVariable Long itemId,
-                                                            @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long itemId,
+                                                            @RequestHeader("X-Sharer-User-Id") Long userId,
+                                                            @RequestBody CommentRequestDto commentDto) {
         return ResponseEntity.ok().body(service.createComment(commentDto, itemId, userId));
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                               @PathVariable Long itemId,
-                                              @Validated({Update.class}) @RequestBody ItemDto itemDto) {
+                                              @RequestBody ItemDto itemDto) {
         return ResponseEntity.ok().body(service.updateItem(userId, itemId, itemDto));
     }
 
@@ -55,13 +49,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> getAllItems(@PositiveOrZero
-                                                             @RequestParam(name = "from", defaultValue = "0")
-                                                             int from,
-                                                             @Positive
-                                                             @RequestParam(name = "size", defaultValue = "20")
-                                                             int size,
-                                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                                           @RequestParam(name = "size", defaultValue = "20") int size) {
         return ResponseEntity.ok().body(service.getAllItems(from, size, userId));
     }
 
