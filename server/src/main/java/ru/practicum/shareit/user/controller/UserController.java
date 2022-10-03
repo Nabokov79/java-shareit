@@ -1,7 +1,5 @@
 package ru.practicum.shareit.user.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public UserController(UserService service) {
@@ -24,7 +21,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        logger.info("Received request to repository to create users userDto={}", userDto);
         return ResponseEntity.ok().body(service.createUser(userDto));
     }
 

@@ -18,7 +18,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Slf4j
 @Validated
 public class BookingController {
-
     private final BookingClient bookingClient;
 
     @PostMapping

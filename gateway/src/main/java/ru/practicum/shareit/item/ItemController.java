@@ -10,7 +10,6 @@ import ru.practicum.shareit.common.Create;
 import ru.practicum.shareit.common.Update;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
