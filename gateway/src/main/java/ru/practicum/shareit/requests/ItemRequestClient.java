@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.requests.dto.ItemRequestCreateDto;
-
-
 import java.util.Map;
 
 @Service
