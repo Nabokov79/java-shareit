@@ -76,26 +76,6 @@ class ItemControllerTest {
     }
 
     @Test
-    void createItem_NameNull() throws Exception {
-        String body = mapper.writeValueAsString(itemDto1);
-        mockMvc.perform(post("/items")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-                        .header("X-Sharer-User-Id", "1"))
-                        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createItem_DescriptionNull() throws Exception {
-        String body = mapper.writeValueAsString(itemDto2);
-        mockMvc.perform(post("/items")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-                        .header("X-Sharer-User-Id", "1"))
-                        .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void createComment() throws Exception {
         String body = mapper.writeValueAsString(comment);
         mockMvc.perform(post("/items/1/comment")

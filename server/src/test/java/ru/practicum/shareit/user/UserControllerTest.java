@@ -23,8 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-
 @AutoConfigureMockMvc
 @WebMvcTest(UserController.class)
 class UserControllerTest {
@@ -39,17 +37,11 @@ class UserControllerTest {
     private UserService userService;
     private UserDto userDto;
     private UserDto userDto2;
-    private UserDto userDto3;
-    private UserDto userDto4;
-    private UserDto userDto5;
 
     @BeforeEach
     void beforeEach() {
         userDto = new UserDto(1L, "User1", "user@email.ru");
         userDto2 = new UserDto(1L, "User1", "mail@email.ru");
-        userDto3 = new UserDto(1L, "", "user_1@email.ru");
-        userDto4 = new UserDto(1L, "User", "");
-        userDto5 = new UserDto(1L, "User", "email.ru");
     }
 
     @Test
@@ -63,36 +55,6 @@ class UserControllerTest {
                         .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
                         .andExpect(jsonPath("$.name", is(userDto.getName()), String.class))
                         .andExpect(jsonPath("$.email", is(userDto.getEmail()), String.class));
-    }
-
-    @Test
-    void createUser_NameNull() throws Exception {
-        String body = mapper.writeValueAsString(userDto3);
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                        .andExpect(status().isBadRequest())
-                        .andReturn();
-    }
-
-    @Test
-    void createUser_EmailNull() throws Exception {
-        String body = mapper.writeValueAsString(userDto4);
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                        .andExpect(status().isBadRequest())
-                        .andReturn();
-    }
-
-    @Test
-    void createUser_EmailInvalid() throws Exception {
-        String body = mapper.writeValueAsString(userDto5);
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                        .andExpect(status().isBadRequest())
-                        .andReturn();
     }
 
     @Test
