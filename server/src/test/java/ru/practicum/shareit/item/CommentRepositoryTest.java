@@ -24,7 +24,6 @@ class CommentRepositoryTest {
 
     @Autowired
     CommentRepository commentRepository;
-
     @Autowired
     UserRepository userRepository;
     @Autowired
