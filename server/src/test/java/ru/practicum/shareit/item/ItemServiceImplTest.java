@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -148,7 +149,7 @@ class ItemServiceImplTest {
 
     @Test
     void getAllItems() {
-        Pageable pageable = PageRequest.of(1,1);
+        Pageable pageable = PageRequest.of(1,1, Sort.by("Owner").descending());
         Item item = new Item(1L, "item", "item test", true, user, null);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(itemRepository.findAllByOwnerId(1, pageable)).thenReturn(Collections.singletonList(item));
