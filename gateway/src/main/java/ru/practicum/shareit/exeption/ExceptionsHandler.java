@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(value = BadRequestException.class)
