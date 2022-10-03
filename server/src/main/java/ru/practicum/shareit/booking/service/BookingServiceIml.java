@@ -21,9 +21,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,7 +86,7 @@ public class BookingServiceIml implements BookingService {
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
         logger.warn("Page = " + pageable.getPageNumber() + " " + "Size = " + pageable.getPageSize());
-        List<Booking> bookings =  new ArrayList<>(bookingRepository.findBookingByBookerId(userId, pageable));
+        List<Booking> bookings =  bookingRepository.findBookingByBookerId(userId, pageable);
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
         }
@@ -100,7 +98,8 @@ public class BookingServiceIml implements BookingService {
     public List<BookingResponseDto> getAllBookingsOwnerItem(int from, int size,String state, Long userId) {
         userService.getUser(userId);
         Pageable pageable = PageRequest.of(from / size,size, Sort.by("start").descending());
-        List<Booking> bookings = bookingRepository.findBookingByOwnerId(userId, pageable);
+        List<Booking> bookings = bookingRepository.findBookingByOwnerId(userId, pageable).stream()
+                                .filter(booking -> booking.getStatus() != Status.REJECTED).collect(Collectors.toList());
         if (bookings.isEmpty()) {
             throw new NotFoundException(String.format("Bookings not found for user %s", userId));
         }
@@ -127,19 +126,9 @@ public class BookingServiceIml implements BookingService {
         logger.info("Set bookings parameters by user_id = " + userId);
     }
 
-    private static Optional<State> checkState(String stateRequest) {
-        for (State state: State.values()) {
-            if (stateRequest.equals(state.toString())) {
-                return Optional.of(State.valueOf(stateRequest));
-            }
-        }
-        return Optional.empty();
-    }
-
     private List<BookingResponseDto> sortByState(String state, List<Booking> bookings) {
-        State state1 = checkState(state).orElseThrow(() -> new BadRequestException("Unknown state: " + state));
         logger.info("Get booking type " + state);
-        switch (state1) {
+        switch (State.valueOf(state)) {
             case FUTURE:
                 return bookings.stream().filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
                         .map(BookingMapper::toBookingResponseDto).collect(Collectors.toList());
