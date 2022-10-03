@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class ValidationErrorException {
+
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -2,7 +2,6 @@ package ru.practicum.shareit.exeption;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @Getter
