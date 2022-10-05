@@ -14,5 +14,4 @@ public class CommentRequestDto {
     private long id;
     @NotBlank(groups = {Create.class}, message = "email should not be blank")
     private String text;
-
 }
