@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ItemClient extends BaseClient {
 
     private static final String API_PREFIX = "/items";
@@ -28,18 +30,22 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createItem(ItemDto itemDto, Long userId) {
+        log.info("Received request to create item from the userId={}, itemDto={}", userId, itemDto);
         return post("", userId,itemDto);
     }
 
     public ResponseEntity<Object> createComment(CommentRequestDto commentDto, Long itemId, Long userId) {
+        log.info("Received request to create comment from the userId={}, commentDto={}", userId, commentDto);
         return post("/" + itemId + "/comment", userId, commentDto);
     }
 
     public ResponseEntity<Object> updateItem(Long userId, Long itemId, ItemDto itemDto) {
+        log.info("Received request to update item from the itemId={}, userId={}, itemDto={}", itemId, userId, itemDto);
         return patch("/" + itemId, userId, itemDto);
     }
 
     public ResponseEntity<Object> getItem(Long userId, Long itemId) {
+        log.info("Received request to get item from the userId={}, itemId={}", userId, itemId);
         return get("/" + itemId, userId);
     }
 
@@ -48,6 +54,7 @@ public class ItemClient extends BaseClient {
                 "from", from,
                 "size", size
         );
+        log.info("Received request to get all items userId={}, from={}, size={}", userId, from, size);
         return get("?from={from}&size={size}", userId, parameters);
     }
 
@@ -59,6 +66,7 @@ public class ItemClient extends BaseClient {
         Map<String, Object> parameters = Map.of(
                 "text", text
         );
+        log.info("Received request to search items by name and desctription userId={}, text={}", userId, text);
         return get("/search?text={text}", userId, parameters);
     }
 }

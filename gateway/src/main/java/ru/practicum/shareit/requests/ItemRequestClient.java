@@ -1,5 +1,6 @@
 package ru.practicum.shareit.requests;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.requests.dto.ItemRequestCreateDto;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ItemRequestClient extends BaseClient {
 
     private static final String API_PREFIX = "/requests";
@@ -26,11 +28,13 @@ public class ItemRequestClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createRequest(Long userId, ItemRequestCreateDto itemRequestCreateDto) {
-        return post("",userId, itemRequestCreateDto);
+    public ResponseEntity<Object> createRequest(Long userId, ItemRequestCreateDto itemRequest) {
+        log.info("Received request to create request from the userId={}, itemRequest={}", userId, itemRequest);
+        return post("",userId, itemRequest);
     }
 
     public ResponseEntity<Object> getUserRequests(Long userId) {
+        log.info("Received request to get request by userId from the userId={}", userId);
         return get("", userId);
     }
 
@@ -39,10 +43,12 @@ public class ItemRequestClient extends BaseClient {
                 "from", from,
                 "size", size
         );
+        log.info("Received request to get all request from the userId={}, from={}, size={}", userId, from, size);
         return get("/all?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> getRequest(Long requestId, Long userId) {
+        log.info("Received request to get request from by requestId the userId={}, requestId={}", userId, requestId);
         return get("/" + requestId, userId);
     }
 }
