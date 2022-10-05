@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -16,14 +15,13 @@ import javax.validation.constraints.PositiveOrZero;
 @Controller
 @RequestMapping("/items")
 @RequiredArgsConstructor
-@Slf4j
 @Validated
 public class ItemController {
     private  final ItemClient itemClient;
 
     @PostMapping
     public ResponseEntity<Object> createItem(@Validated({Create.class}) @RequestBody ItemDto itemDto,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemClient.createItem(itemDto, userId);
     }
 
@@ -36,14 +34,13 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@PathVariable Long itemId,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId,
-                                              @Validated({Update.class}) @RequestBody ItemDto itemDto) {
+                                             @RequestHeader("X-Sharer-User-Id") Long userId,
+                                             @Validated({Update.class}) @RequestBody ItemDto itemDto) {
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                   @PathVariable Long itemId) {
+    public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         return itemClient.getItem(userId, itemId);
     }
 
@@ -61,7 +58,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItemByNameAndDesctription(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                                         @RequestParam String text) {
+                                                                  @RequestParam String text) {
         return itemClient.searchItemByNameAndDesctription(userId, text);
     }
 }
