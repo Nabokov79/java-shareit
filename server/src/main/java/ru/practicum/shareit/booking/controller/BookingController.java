@@ -45,7 +45,7 @@ public class BookingController {
                                                       @RequestParam(name = "from", defaultValue = "0") int from,
                                                       @RequestParam(name = "size", defaultValue = "20") int size,
                                                       @RequestParam(value = "state", defaultValue = "ALL") String state,
-                                                    @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                      @RequestHeader("X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok().body(bookingService.getAllBookingsByBookerId(from, size, state, userId));
     }
 
