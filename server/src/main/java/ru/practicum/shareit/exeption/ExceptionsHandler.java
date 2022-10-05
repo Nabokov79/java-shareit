@@ -13,13 +13,13 @@ public class ExceptionsHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
-    protected ResponseEntity<Object> handleNotFound(NotFoundException ex) {
+    protected ResponseEntity<Object> handleNotFound(final NotFoundException ex) {
         logger.error("Not found error: {}", ex.getMessage(), ex);
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler
-    protected ResponseEntity<Object> handleBadRequest(BadRequestException ex) {
+    protected ResponseEntity<Object> handleBadRequest(final BadRequestException ex) {
         logger.error("Bad request error: {}", ex.getMessage(), ex);
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
